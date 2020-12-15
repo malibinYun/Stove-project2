@@ -3,6 +3,7 @@ package com.example.usermanagement.service;
 import com.example.usermanagement.controller.dto.SignUpRequestDto;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.domain.repository.AccountRepository;
+import com.example.usermanagement.exception.AccountDuplicateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class AccountService {
     public void signUp(SignUpRequestDto dto) {
         Optional<Account> retrievalAccount = accountRepository.findByAccountId(dto.getAccountId());
         if (retrievalAccount.isPresent()) {
-            throw new IllegalArgumentException("동일 아이디가 이미 존재합니다.");
+            throw new AccountDuplicateException("동일 아이디가 이미 존재합니다.");
         }
         Account account = new Account(dto.getAccountId(), dto.getPassword(), dto.getNickName(), false);
         accountRepository.save(account);
