@@ -2,6 +2,7 @@ package com.example.usermanagement.controller;
 
 import com.example.usermanagement.controller.dto.ExceptionMessageDto;
 import com.example.usermanagement.exception.AccountDuplicateException;
+import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,8 +16,14 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(AccountDuplicateException.class)
-    public ExceptionMessageDto shortenUrlNotFound(AccountDuplicateException e) {
+    public ExceptionMessageDto duplicateAccount(AccountDuplicateException e) {
         e.printStackTrace();
         return new ExceptionMessageDto(e.getMessage());
+    }
+
+    @ExceptionHandler(IdOrPasswordNotMatchException.class)
+    public ExceptionMessageDto idOrPasswordNotMatch(IdOrPasswordNotMatchException e){
+        e.printStackTrace();
+        return new ExceptionMessageDto("Id또는 Password가 맞지 않습니다.");
     }
 }
