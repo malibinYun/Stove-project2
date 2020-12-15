@@ -17,7 +17,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void signUp(SignUpRequestDto dto) {
+    synchronized public void signUp(SignUpRequestDto dto) {
         Optional<Account> retrievalAccount = accountRepository.findByAccountId(dto.getAccountId());
         if (retrievalAccount.isPresent()) {
             throw new AccountDuplicateException("동일 아이디가 이미 존재합니다.");
