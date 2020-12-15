@@ -26,7 +26,7 @@ public class AccountService {
     synchronized public void signUp(SignUpRequestDto dto) {
         Optional<Account> retrievalAccount = accountRepository.findByAccountId(dto.getAccountId());
         if (retrievalAccount.isPresent()) {
-            throw new AccountDuplicateException();
+            throw new AccountDuplicateException("동일 아이디가 이미 존재합니다.");
         }
         String encryptedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
         Account account = new Account(dto.getAccountId(), encryptedPassword, dto.getNickName(), false);
