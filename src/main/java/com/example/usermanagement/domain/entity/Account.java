@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 public class Account {
 
     @Id
+    @GeneratedValue
     private long id;
 
     @Column(nullable = false, unique = true)
@@ -35,7 +37,7 @@ public class Account {
         this.accountId = accountId;
         this.password = password;
         this.nickName = nickName;
-        this.joinDate = new Date(System.currentTimeMillis());
+        this.joinDate = new Date();
         this.isAdmin = isAdmin;
     }
 }
