@@ -1,5 +1,6 @@
 package com.example.usermanagement.service;
 
+import com.example.usermanagement.controller.dto.AccountsResponseDto;
 import com.example.usermanagement.controller.dto.AuthenticationResponse;
 import com.example.usermanagement.controller.dto.LoginRequestDto;
 import com.example.usermanagement.controller.dto.SignUpRequestDto;
@@ -8,6 +9,7 @@ import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.domain.repository.AccountRepository;
 import com.example.usermanagement.exception.AccountDuplicateException;
 import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
+import com.example.usermanagement.exception.NoPermissionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.ehcache.Cache;
@@ -17,7 +19,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,10 +60,19 @@ public class AccountService {
         cache.put(new Element(token, account));
     }
 
+    public List<AccountsResponseDto> getAccounts(String token) {
+        Account requestUser = getAccountByToken(token);
+        if (requestUser.isNotAdmin()) {
+            throw new NoPermissionException();
+        }
+        return accountRepository.findAll().stream()
+                .map(AccountsResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     @Cacheable(key = "#token", value = "tokenCache")
     public Account getAccountByToken(String token) {
         JwtToken jwtToken = new JwtToken(token);
-
         return accountRepository.findById(jwtToken.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("토큰에 해당하는 account를 찾을 수 없음."));
     }

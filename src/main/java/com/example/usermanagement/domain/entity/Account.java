@@ -41,4 +41,8 @@ public class Account implements Serializable {
         this.joinDate = new Date();
         this.isAdmin = isAdmin;
     }
+
+    public Boolean isNotAdmin() {
+        return !isAdmin;
+    }
 }

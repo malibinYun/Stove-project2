@@ -1,13 +1,15 @@
 package com.example.usermanagement.controller;
 
+import com.example.usermanagement.controller.dto.AccountsResponseDto;
 import com.example.usermanagement.controller.dto.AuthenticationResponse;
 import com.example.usermanagement.controller.dto.LoginRequestDto;
 import com.example.usermanagement.controller.dto.SignUpRequestDto;
-import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +30,8 @@ public class AccountController {
     }
 
     @GetMapping("/accounts")
-    public Account getAccountByToken(@RequestHeader("Authorization") String token) {
-        return accountService.getAccountByToken(token);
+    public ResponseEntity<List<AccountsResponseDto>> getAccountByToken(@RequestHeader("Authorization") String token) {
+        List<AccountsResponseDto> accounts = accountService.getAccounts(token);
+        return ResponseEntity.ok(accounts);
     }
 }

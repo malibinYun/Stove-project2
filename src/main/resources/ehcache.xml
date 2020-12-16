@@ -15,5 +15,4 @@
            transactionalMode="off">
         <persistence strategy="localTempSwap"/>
     </cache>
-
 </ehcache>
