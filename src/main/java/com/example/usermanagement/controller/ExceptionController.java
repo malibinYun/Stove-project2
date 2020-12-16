@@ -20,6 +20,13 @@ public class ExceptionController {
                 .body(new ExceptionMessageDto("internal server error"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionMessageDto> illegalArgumentError(IllegalArgumentException e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest()
+                .body(new ExceptionMessageDto(e.getMessage()));
+    }
+
     @ExceptionHandler(AccountDuplicateException.class)
     public ResponseEntity<ExceptionMessageDto> duplicateAccount(AccountDuplicateException e) {
         e.printStackTrace();

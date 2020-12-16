@@ -35,7 +35,7 @@ public class JwtToken {
     }
 
     public long getUserId() {
-        return (long) payLoads.get(KEY_USER_ID);
+        return new Long((Integer) payLoads.get(KEY_USER_ID));
     }
 
     public static String generate(Account account) {
