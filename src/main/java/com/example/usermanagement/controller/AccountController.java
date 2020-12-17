@@ -4,10 +4,16 @@ import com.example.usermanagement.controller.dto.AccountsResponseDto;
 import com.example.usermanagement.controller.dto.AuthenticationResponse;
 import com.example.usermanagement.controller.dto.LoginRequestDto;
 import com.example.usermanagement.controller.dto.SignUpRequestDto;
+import com.example.usermanagement.controller.resolver.annotation.AdminUser;
+import com.example.usermanagement.domain.entity.Account;
+import com.example.usermanagement.controller.resolver.annotation.RequestUser;
 import com.example.usermanagement.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -30,8 +36,8 @@ public class AccountController {
     }
 
     @GetMapping("/accounts")
-    public ResponseEntity<List<AccountsResponseDto>> getAccountByToken(@RequestHeader("Authorization") String token) {
-        List<AccountsResponseDto> accounts = accountService.getAccounts(token);
+    public ResponseEntity<List<AccountsResponseDto>> getAccountsByToken(@AdminUser Account adminUser) {
+        List<AccountsResponseDto> accounts = accountService.getAllAccounts(adminUser);
         return ResponseEntity.ok(accounts);
     }
 }

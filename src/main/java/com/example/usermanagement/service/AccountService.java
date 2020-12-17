@@ -31,7 +31,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void signUp(SignUpRequestDto dto) {
+    public void signUp(final SignUpRequestDto dto) {
         Optional<Account> retrievalAccount = accountRepository.findByAccountId(dto.getAccountId());
         if (retrievalAccount.isPresent()) {
             throw new AccountDuplicateException("동일 아이디가 이미 존재합니다.");
@@ -42,7 +42,7 @@ public class AccountService {
         System.out.println(JwtToken.generate(account));
     }
 
-    public AuthenticationResponse login(LoginRequestDto dto) {
+    public AuthenticationResponse login(final LoginRequestDto dto) {
         Account existAccount = accountRepository.findByAccountId(dto.getAccountId())
                 .orElseThrow(() -> new IdOrPasswordNotMatchException(String.format("%s : id가 존재하지 않음", dto.getAccountId())));
         boolean isPasswordMatch = bCryptPasswordEncoder.matches(dto.getPassword(), existAccount.getPassword());
@@ -54,15 +54,14 @@ public class AccountService {
         return new AuthenticationResponse(accessToken);
     }
 
-    private void cacheToken(String token, Account account) {
+    private void cacheToken(final String token, final Account account) {
         CacheManager cacheManager = CacheManager.create();
         Cache cache = cacheManager.getCache("tokenCache");
         cache.put(new Element(token, account));
     }
 
-    public List<AccountsResponseDto> getAccounts(String token) {
-        Account requestUser = getAccountByToken(token);
-        if (requestUser.isNotAdmin()) {
+    public List<AccountsResponseDto> getAllAccounts(final Account adminUser) {
+        if (adminUser.isNotAdmin()) {
             throw new NoPermissionException();
         }
         return accountRepository.findAll().stream()
@@ -71,7 +70,7 @@ public class AccountService {
     }
 
     @Cacheable(key = "#token", value = "tokenCache")
-    public Account getAccountByToken(String token) {
+    public Account getAccountByToken(final String token) {
         JwtToken jwtToken = new JwtToken(token);
         return accountRepository.findById(jwtToken.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("토큰에 해당하는 account를 찾을 수 없음."));
