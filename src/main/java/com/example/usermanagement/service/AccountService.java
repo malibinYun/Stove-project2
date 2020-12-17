@@ -9,6 +9,7 @@ import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.domain.repository.AccountRepository;
 import com.example.usermanagement.exception.AccountDuplicateException;
 import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
+import com.example.usermanagement.exception.NoAccountException;
 import com.example.usermanagement.exception.NoPermissionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,6 @@ public class AccountService {
         String encryptedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
         Account account = new Account(dto.getAccountId(), encryptedPassword, dto.getNickName(), false);
         accountRepository.save(account);
-        System.out.println(JwtToken.generate(account));
     }
 
     public AuthenticationResponse login(final LoginRequestDto dto) {
@@ -73,6 +73,20 @@ public class AccountService {
     public Account getAccountByToken(final String token) {
         JwtToken jwtToken = new JwtToken(token);
         return accountRepository.findById(jwtToken.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("토큰에 해당하는 account를 찾을 수 없음."));
+                .orElseThrow(() -> new NoAccountException("토큰에 해당하는 계정이 존재하지 않습니다."));
+    }
+
+    public void changeNickName(final long id, final String newNickName) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(NoAccountException::new);
+        account.changeNickname(newNickName);
+        accountRepository.save(account);
+    }
+
+    public void changePermission(final long id, final Boolean isAdmin) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(NoAccountException::new);
+        account.changePermission(isAdmin);
+        accountRepository.save(account);
     }
 }

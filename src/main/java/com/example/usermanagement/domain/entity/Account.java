@@ -45,4 +45,12 @@ public class Account implements Serializable {
     public Boolean isNotAdmin() {
         return !isAdmin;
     }
+
+    public void changeNickname(String newNickName) {
+        this.nickName = newNickName;
+    }
+
+    public void changePermission(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 }

@@ -3,6 +3,7 @@ package com.example.usermanagement.controller;
 import com.example.usermanagement.controller.dto.ExceptionMessageDto;
 import com.example.usermanagement.exception.AccountDuplicateException;
 import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
+import com.example.usermanagement.exception.NoAccountException;
 import com.example.usermanagement.exception.NoPermissionException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -61,5 +63,21 @@ public class ExceptionController {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionMessageDto("권한이 없습니다."));
+    }
+
+    @ExceptionHandler(NoAccountException.class)
+    public ResponseEntity<ExceptionMessageDto> haveNotPermission(final NoAccountException e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest()
+                .body(new ExceptionMessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ExceptionMessageDto> haveNotPermission(final MethodArgumentTypeMismatchException e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest()
+                .body(new ExceptionMessageDto("파라미터 타입을 잘못 입력했습니다. <" +
+                        e.getValue() + "> -> <" +
+                        e.getRequiredType() + "> 타입으로 입력해야합니다."));
     }
 }
