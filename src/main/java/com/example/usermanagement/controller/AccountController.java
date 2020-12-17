@@ -1,9 +1,6 @@
 package com.example.usermanagement.controller;
 
 import com.example.usermanagement.controller.dto.AccountsResponseDto;
-import com.example.usermanagement.controller.dto.AuthenticationResponse;
-import com.example.usermanagement.controller.dto.LoginRequestDto;
-import com.example.usermanagement.controller.dto.SignUpRequestDto;
 import com.example.usermanagement.controller.resolver.annotation.AdminUser;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.service.AccountService;
@@ -18,18 +15,6 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
-
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpRequestDto dto) {
-        accountService.signUp(dto);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequestDto dto) {
-        AuthenticationResponse response = accountService.login(dto);
-        return ResponseEntity.ok(response);
-    }
 
     @GetMapping("/accounts")
     public ResponseEntity<List<AccountsResponseDto>> getAccountsByToken(@AdminUser Account adminUser) {

@@ -5,6 +5,7 @@ import com.example.usermanagement.controller.resolver.annotation.RequestUser;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.exception.NoPermissionException;
 import com.example.usermanagement.service.AccountService;
+import com.example.usermanagement.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class AccountArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "Authorization";
 
-    private final AccountService accountService;
+    private final AuthService authService;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
@@ -42,7 +43,7 @@ public class AccountArgumentResolver implements HandlerMethodArgumentResolver {
         if (token == null) {
             throw new IllegalArgumentException("헤더에 토큰이 없습니다.");
         }
-        Account account = accountService.getAccountByToken(token);
+        Account account = authService.getAccountByToken(token);
         validateAdmin(methodParameter, account);
         return account;
     }
