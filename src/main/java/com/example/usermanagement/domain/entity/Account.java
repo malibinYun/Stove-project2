@@ -34,6 +34,9 @@ public class Account implements Serializable {
     @Column(nullable = false)
     private Boolean isAdmin;
 
+    @Column()
+    private String refreshToken;
+
     public Account(String accountId, String password, String nickName, Boolean isAdmin) {
         this.accountId = accountId;
         this.password = password;
@@ -52,5 +55,9 @@ public class Account implements Serializable {
 
     public void changePermission(Boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

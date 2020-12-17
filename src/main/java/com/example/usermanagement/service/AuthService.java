@@ -9,6 +9,8 @@ import com.example.usermanagement.domain.repository.AccountRepository;
 import com.example.usermanagement.exception.AccountDuplicateException;
 import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
 import com.example.usermanagement.exception.NoAccountException;
+import com.example.usermanagement.exception.NoPermissionException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.ehcache.Cache;
@@ -41,13 +43,25 @@ public class AuthService {
     public AuthenticationResponse login(final LoginRequestDto dto) {
         Account existAccount = accountRepository.findByAccountId(dto.getAccountId())
                 .orElseThrow(() -> new IdOrPasswordNotMatchException(String.format("%s : id가 존재하지 않음", dto.getAccountId())));
-        boolean isPasswordMatch = bCryptPasswordEncoder.matches(dto.getPassword(), existAccount.getPassword());
+        validatePassword(dto, existAccount);
+
+        String accessToken = JwtToken.generateAccessToken(existAccount);
+        String refreshToken = JwtToken.generateRefreshToken(existAccount);
+        cacheToken(accessToken, existAccount);
+        saveRefreshToken(existAccount, refreshToken);
+        return new AuthenticationResponse(accessToken, refreshToken);
+    }
+
+    private void validatePassword(final LoginRequestDto dto, final Account account) {
+        boolean isPasswordMatch = bCryptPasswordEncoder.matches(dto.getPassword(), account.getPassword());
         if (!isPasswordMatch) {
             throw new IdOrPasswordNotMatchException("password가 일치하지 않음");
         }
-        String accessToken = JwtToken.generate(existAccount);
-        cacheToken(accessToken, existAccount);
-        return new AuthenticationResponse(accessToken);
+    }
+
+    private void saveRefreshToken(final Account account, String refreshToken) {
+        account.changeRefreshToken(refreshToken);
+        accountRepository.save(account);
     }
 
     private void cacheToken(final String token, final Account account) {
@@ -57,9 +71,23 @@ public class AuthService {
     }
 
     @Cacheable(key = "#token", value = "tokenCache")
-    public Account getAccountByToken(final String token) {
+    public Account getAccountByAccessToken(final String token) {
         JwtToken jwtToken = new JwtToken(token);
+        if (jwtToken.isRefreshToken()) {
+            throw new NoPermissionException("유효한 토큰이 아닙니다.");
+        }
         return accountRepository.findById(jwtToken.getUserId())
                 .orElseThrow(() -> new NoAccountException("토큰에 해당하는 계정이 존재하지 않습니다."));
+    }
+
+    public AuthenticationResponse refreshToken(final String receiveToken) {
+        JwtToken.validate(receiveToken);
+        Account account = accountRepository.findByRefreshToken(receiveToken)
+                .orElseThrow(() -> new IllegalArgumentException("유효한 토큰이 아닙니다."));
+        String accessToken = JwtToken.generateAccessToken(account);
+        String refreshToken = JwtToken.generateRefreshToken(account);
+        cacheToken(accessToken, account);
+        saveRefreshToken(account, refreshToken);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 }

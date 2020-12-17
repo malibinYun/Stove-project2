@@ -62,7 +62,7 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessageDto> haveNotPermission(final NoPermissionException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ExceptionMessageDto("권한이 없습니다."));
+                .body(new ExceptionMessageDto(e.getMessage()));
     }
 
     @ExceptionHandler(NoAccountException.class)

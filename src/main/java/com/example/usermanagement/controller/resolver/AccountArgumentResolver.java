@@ -4,7 +4,6 @@ import com.example.usermanagement.controller.resolver.annotation.AdminUser;
 import com.example.usermanagement.controller.resolver.annotation.RequestUser;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.exception.NoPermissionException;
-import com.example.usermanagement.service.AccountService;
 import com.example.usermanagement.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -43,7 +42,7 @@ public class AccountArgumentResolver implements HandlerMethodArgumentResolver {
         if (token == null) {
             throw new IllegalArgumentException("헤더에 토큰이 없습니다.");
         }
-        Account account = authService.getAccountByToken(token);
+        Account account = authService.getAccountByAccessToken(token);
         validateAdmin(methodParameter, account);
         return account;
     }
