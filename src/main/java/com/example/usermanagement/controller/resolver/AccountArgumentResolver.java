@@ -39,7 +39,7 @@ public class AccountArgumentResolver implements HandlerMethodArgumentResolver {
     ) throws Exception {
         HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
         String token = request.getHeader(AUTHORIZATION);
-        if (token == null) {
+        if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("헤더에 토큰이 없습니다.");
         }
         Account account = authService.getAccountByAccessToken(token);

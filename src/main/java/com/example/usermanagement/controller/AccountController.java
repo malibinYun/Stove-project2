@@ -16,13 +16,13 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/accounts")
+    @GetMapping("/api/accounts")
     public ResponseEntity<List<AccountsResponseDto>> getAccountsByToken(@AdminUser Account adminUser) {
         List<AccountsResponseDto> accounts = accountService.getAllAccounts(adminUser);
         return ResponseEntity.ok(accounts);
     }
 
-    @PatchMapping("/account/nickname/{id}")
+    @PatchMapping("/api/account/nickname/{id}")
     public ResponseEntity<Void> changeNickName(
             @AdminUser Account adminUser,
             @PathVariable long id,
@@ -32,7 +32,7 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/account/permission/{id}")
+    @PatchMapping("/api/account/permission/{id}")
     public ResponseEntity<Void> changePermission(
             @AdminUser Account adminUser,
             @PathVariable long id,

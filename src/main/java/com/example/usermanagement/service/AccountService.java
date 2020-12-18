@@ -1,27 +1,15 @@
 package com.example.usermanagement.service;
 
 import com.example.usermanagement.controller.dto.AccountsResponseDto;
-import com.example.usermanagement.controller.dto.AuthenticationResponse;
-import com.example.usermanagement.controller.dto.LoginRequestDto;
-import com.example.usermanagement.controller.dto.SignUpRequestDto;
-import com.example.usermanagement.domain.JwtToken;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.domain.repository.AccountRepository;
-import com.example.usermanagement.exception.AccountDuplicateException;
-import com.example.usermanagement.exception.IdOrPasswordNotMatchException;
 import com.example.usermanagement.exception.NoAccountException;
 import com.example.usermanagement.exception.NoPermissionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j

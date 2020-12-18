@@ -17,19 +17,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signup")
+    @PostMapping("/api/signup")
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequestDto dto) {
         authService.signUp(dto);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequestDto dto) {
         AuthenticationResponse response = authService.login(dto);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/api/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         AuthenticationResponse response = authService.refreshToken(refreshToken);
         return ResponseEntity.ok(response);
