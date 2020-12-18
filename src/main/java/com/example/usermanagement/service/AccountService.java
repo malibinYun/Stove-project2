@@ -1,6 +1,6 @@
 package com.example.usermanagement.service;
 
-import com.example.usermanagement.controller.dto.AccountsResponseDto;
+import com.example.usermanagement.controller.dto.AccountResponseDto;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.domain.repository.AccountRepository;
 import com.example.usermanagement.exception.NoAccountException;
@@ -19,12 +19,12 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public List<AccountsResponseDto> getAllAccounts(final Account adminUser) {
+    public List<AccountResponseDto> getAllAccounts(final Account adminUser) {
         if (adminUser.isNotAdmin()) {
             throw new NoPermissionException();
         }
         return accountRepository.findAll().stream()
-                .map(AccountsResponseDto::new)
+                .map(AccountResponseDto::new)
                 .collect(Collectors.toList());
     }
 

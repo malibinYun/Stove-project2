@@ -36,8 +36,13 @@ const accounts = {
 
         }).fail(function (error) {
             const response = JSON.parse(error.responseText)
-            alert(response.message);
-            window.location.href = "/"
+            if(response.message === '권한이 없습니다.'){
+                console.log("??")
+                window.location.href = "/mypage"
+            }else{
+                alert(response.message);
+                window.location.href = "/"
+            }
         });
     },
 

@@ -20,4 +20,9 @@ public class WebController {
     public String showAccounts() {
         return "accounts";
     }
+
+    @GetMapping("/mypage")
+    public String showAccount() {
+        return "myPage";
+    }
 }

@@ -1,7 +1,8 @@
 package com.example.usermanagement.controller;
 
-import com.example.usermanagement.controller.dto.AccountsResponseDto;
+import com.example.usermanagement.controller.dto.AccountResponseDto;
 import com.example.usermanagement.controller.resolver.annotation.AdminUser;
+import com.example.usermanagement.controller.resolver.annotation.RequestUser;
 import com.example.usermanagement.domain.entity.Account;
 import com.example.usermanagement.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/api/accounts")
-    public ResponseEntity<List<AccountsResponseDto>> getAccountsByToken(@AdminUser Account adminUser) {
-        List<AccountsResponseDto> accounts = accountService.getAllAccounts(adminUser);
+    public ResponseEntity<List<AccountResponseDto>> getAccountsByToken(@AdminUser Account adminUser) {
+        List<AccountResponseDto> accounts = accountService.getAllAccounts(adminUser);
         return ResponseEntity.ok(accounts);
     }
 
@@ -40,5 +41,10 @@ public class AccountController {
     ) {
         accountService.changePermission(id, isAdmin);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/account")
+    public ResponseEntity<AccountResponseDto> getAccountInfo(@RequestUser Account account) {
+        return ResponseEntity.ok(new AccountResponseDto(account));
     }
 }

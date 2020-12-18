@@ -6,14 +6,14 @@ import lombok.Getter;
 import java.util.Date;
 
 @Getter
-public class AccountsResponseDto {
+public class AccountResponseDto {
     private final long id;
     private final String accountId;
     private final String nickName;
     private final Date joinDate;
     private final Boolean isAdmin;
 
-    public AccountsResponseDto(Account entity) {
+    public AccountResponseDto(Account entity) {
         this.id = entity.getId();
         this.accountId = entity.getAccountId();
         this.nickName = entity.getNickName();
