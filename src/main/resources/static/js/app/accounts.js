@@ -1,6 +1,9 @@
 const accounts = {
     init: function () {
         this.loadAccounts()
+        $('#button-logout').on('click', () => {
+            this.logout()
+        })
     },
 
     loadAccounts: function loadAccounts() {
@@ -37,6 +40,12 @@ const accounts = {
             window.location.href = "/"
         });
     },
+
+    logout: function logout() {
+        alert("로그아웃 되었습니다")
+        deleteCookie()
+        window.location.href = "/"
+    }
 }
 
 accounts.init()

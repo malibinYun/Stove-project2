@@ -17,6 +17,6 @@ function checkCookie() {
     alert(this.getCookie('accessToken'))
 }
 
-function removeCookie() {
+function deleteCookie() {
     document.cookie = 'accessToken=;'
 }

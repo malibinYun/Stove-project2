@@ -4,12 +4,6 @@ const login = {
         $('#button-login').on('click', () => {
             _this.login()
         })
-        $('#button-delete').on('click', () => {
-            removeCookie()
-        })
-        $('#button-cookie').on('click', () => {
-            checkCookie()
-        })
     },
 
     login: function () {
